@@ -1,7 +1,7 @@
 <template>
   <div class="deployment-form">
     <h2>Deployment Create</h2>
-    <!-- ObjectMeta Girdisi -->
+    <!-- ObjectMeta Inputs -->
     <div>
       <label>Name:</label>
       <input type="text" v-model="podRequest.object_meta.name" placeholder="Pod ismi (ex: my-pod)" />
@@ -13,7 +13,7 @@
         placeholder="Namespace (optional, default value: default)" />
     </div>
 
-    <!-- Spec - Containers Girdisi -->
+    <!-- Spec - Containers Inputs -->
     <div>
       <h3>Containers</h3>
       <div v-for="(container, index) in podRequest.spec.containers" :key="index" class="container-form">
@@ -51,10 +51,10 @@
       </div>
     </div>
 
-    <!-- JSON'u Oluşturma ve Gönderme -->
+    <!-- Create JSON and send -->
     <button @click="sendJson">JSON'u Gönder</button>
 
-    <!-- Gönderim Durumu -->
+    <!-- Send status -->
     <div v-if="sendStatus">
       <p>{{ sendStatus }}</p>
     </div>
@@ -90,23 +90,23 @@ export default {
   },
   methods: {
     addContainer() {
-      // Yeni bir container eklemek için kullanılır
+      // Add new container
       this.podRequest.spec.containers.push({ name: '', image: '' });
     },
     removeContainer(index) {
-      // Belirli bir container'ı kaldırmak için kullanılır
+      // Delete specify container
       this.podRequest.spec.containers.splice(index, 1);
     },
     addAnnotation() {
-      // Yeni bir annotation eklemek için kullanılır
+      // Add new container
       this.podRequest.annotations.push('');
     },
     removeAnnotation(index) {
-      // Belirli bir annotation'ı kaldırmak için kullanılır
+      // delete annotations
       this.podRequest.annotations.splice(index, 1);
     },
     async sendJson() {
-      // JSON verisini /pods endpointine gönderme
+      // Send JSON on the /pods endpoint
       try {
         console.log(this.podRequest)
         const response = await axios.post('http://localhost:8080/pods', this.podRequest, {
@@ -114,11 +114,11 @@ export default {
             'Content-Type': 'application/json',
           },
         });
-        this.sendStatus = 'Veri başarıyla gönderildi!';
+        this.sendStatus = 'Created';
         console.log(response)
       } catch (error) {
         console.error(error);
-        this.sendStatus = 'Veri gönderilirken bir hata oluştu.';
+        this.sendStatus = 'error accured';
       }
     },
   },
