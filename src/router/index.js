@@ -1,35 +1,45 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import PodForm from '@/components/PodForm.vue'; // Pod main form
+import PodView from '@/views/PodView.vue'; // Pod main view
 import PodDetail from '@/components/PodDetail.vue'; // Pod detail form
-import NamespaceForm from '@/components/NamespaceForm.vue'; // Namespace main form
-import NamespaceDetail from '@/components/NamespaceDetail.vue'; // Namespace main form
-import DeploymentList from '@/components/DeploymentForm.vue'; // Deployment main form
+
+import NamespaceView from '@/views/NamespaceView.vue'; // Namespace main view
+import NamespaceDetail from '@/components/NamespaceDetail.vue'; // Namespace detail form
+
+import DeploymentView from '@/views/DeploymentView.vue'; // Deployment main view
+import DeploymentDetail from '@/components/DeploymentDetail.vue'; // Deployment detail form
 
 const routes = [
     {
         path: '/pods',
         name: 'PodList',
-        component: PodForm
+        component: PodView
     },
     {
         path: '/pods/:podName',
         name: 'PodDetail',
         component: PodDetail
     },
+
     {
         path: '/namespaces',
         name: 'NamespaceList',
-        component: NamespaceForm
+        component: NamespaceView
     },
     {
         path: '/namespaces/:namespaceName',
         name: 'NamespaceDetail',
         component: NamespaceDetail
     },
+
     {
         path: '/deployments',
-        name: 'DeploymentList',
-        component: DeploymentList
+        name: 'DeploymentForm',
+        component: DeploymentView
+    },
+    {
+        path: '/deployments/:deploymentName',
+        name: 'DeploymentDetail',
+        component: DeploymentDetail
     }
 ];
 
