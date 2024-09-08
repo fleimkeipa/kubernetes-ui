@@ -1,46 +1,19 @@
 <template>
   <div>
+
     <!-- Toolbar -->
     <div class="toolbar">
-      <button @click="showComponent('A')">Deployment Create</button>
-      <button @click="showComponent('B')">Pod</button>
-      <button @click="showComponent('C')">Namespace</button>
+      <router-link to="/deployments" class="toolbar-button">Deployment -</router-link>
+      <router-link to="/pods" class="toolbar-button">- Pod -</router-link>
+      <router-link to="/namespaces" class="toolbar-button">- Namespace</router-link>
     </div>
 
-    <!-- Form Bileşenleri -->
-    <div v-if="currentComponent === 'A'">
-      <DeploymentForm />
-    </div>
-    <div v-if="currentComponent === 'B'">
-      <PodForm />
-    </div>
-    <div v-if="currentComponent === 'C'">
-      <NamespaceForm />
-    </div>
+    <router-view></router-view> <!-- Show router views -->
   </div>
 </template>
 
 <script>
-import DeploymentForm from './components/DeploymentForm.vue';
-import PodForm from './components/PodForm.vue';
-import NamespaceForm from './components/NamespaceForm.vue';
-
 export default {
-  components: {
-    DeploymentForm,
-    PodForm,
-    NamespaceForm,
-  },
-  data() {
-    return {
-      currentComponent: 'B', // Main component
-    };
-  },
-  methods: {
-    showComponent(component) {
-      this.currentComponent = component;
-    },
-  },
 };
 </script>
 
