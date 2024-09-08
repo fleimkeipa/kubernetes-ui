@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import PodView from '@/views/PodView.vue'; // Pod main view
 import PodDetail from '@/components/PodDetail.vue'; // Pod detail form
+import PodEdit from '@/components/PodEdit.vue'; // Pod edit form
 
 import NamespaceView from '@/views/NamespaceView.vue'; // Namespace main view
 import NamespaceDetail from '@/components/NamespaceDetail.vue'; // Namespace detail form
@@ -18,6 +19,12 @@ const routes = [
         path: '/pods/:podName',
         name: 'PodDetail',
         component: PodDetail
+    },
+    {
+        path: '/pods/:podName',
+        name: 'PodEdit',
+        component: PodEdit,
+        props: true
     },
 
     {
