@@ -2,28 +2,34 @@
   <div class="pod-form">
     <!-- Toolbar -->
     <div class="toolbar">
-      <button @click="showComponent('A')">Simple Pod Create</button>
-      <button @click="showComponent('B')">Advanced Pod Create</button>
+      <button @click="showComponent('A')">List</button>
+      <button @click="showComponent('B')">Simple Create</button>
+      <button @click="showComponent('C')">Advanced Create</button>
     </div>
 
     <!-- Form Bileşenleri -->
     <div v-if="currentComponent === 'A'">
-      <SimplePodForm />
+      <PodListForm />
     </div>
     <div v-if="currentComponent === 'B'">
+      <SimplePodForm />
+    </div>
+    <div v-if="currentComponent === 'C'">
       <AdvancedPodForm />
     </div>
   </div>
 </template>
 
 <script>
-import AdvancedPodForm from './PodAdvancedForm.vue';
-import SimplePodForm from './PodSimpleForm.vue';
+import PodListForm from './PodList.vue';
+import AdvancedPodForm from './PodCreateAdvanced.vue';
+import SimplePodForm from './PodCreateSimple.vue';
 
 export default {
   components: {
     SimplePodForm,
     AdvancedPodForm,
+    PodListForm
   },
   data() {
     return {
