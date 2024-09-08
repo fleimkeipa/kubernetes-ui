@@ -14,25 +14,33 @@
             <!-- Pod list -->
             <div v-if="pods && pods.length">
                 <ul>
-                    <li v-for="(pod, index) in pods" :key="index">
-                        <h2>
-                            <router-link :to="{ name: 'PodDetail', params: { podName: pod.metadata.name } }">
-                                {{ pod.metadata.name }}
-                            </router-link>
-                        </h2>
-                        <p>Namespace: {{ pod.metadata.namespace }}</p>
-                        <p>UID: {{ pod.metadata.uid }}</p>
-                        <p>Status: {{ pod.status.phase }}</p>
-                        <p>Start Time: {{ pod.status.startTime }}</p>
+                    <li v-for="(pod, index) in pods" :key="index" class="pod-item">
+                        <div class="pod-info">
+                            <h2>
+                                <router-link :to="{ name: 'PodDetail', params: { podName: pod.metadata.name } }">
+                                    {{ pod.metadata.name }}
+                                </router-link>
+                            </h2>
+                            <p>Namespace: {{ pod.metadata.namespace }}</p>
+                            <p>UID: {{ pod.metadata.uid }}</p>
+                            <p>Status: {{ pod.status.phase }}</p>
+                            <p>Start Time: {{ pod.status.startTime }}</p>
 
-                        <h3>Container Info</h3>
-                        <ul>
-                            <li v-for="(container, containerIndex) in pod.spec.containers" :key="containerIndex">
-                                <p>Name: {{ container.name }}</p>
-                                <p>Image: {{ container.image }}</p>
-                                <p>Image Pull Policy: {{ container.imagePullPolicy }}</p>
-                            </li>
-                        </ul>
+                            <h3>Container Info</h3>
+                            <ul>
+                                <li v-for="(container, containerIndex) in pod.spec.containers" :key="containerIndex">
+                                    <p>Name: {{ container.name }}</p>
+                                    <p>Image: {{ container.image }}</p>
+                                    <p>Image Pull Policy: {{ container.imagePullPolicy }}</p>
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- CRUD buttons -->
+                        <div class="pod-actions">
+                            <i class="fas fa-edit" @click="editPod(pod.metadata.name)" title="Edit"></i>
+                            <i class="fas fa-info-circle" @click="goToDetail(pod.metadata.name)" title="Detail"></i>
+                            <i class="fas fa-trash" @click="deletePod(pod.metadata.name)" title="Delete"></i>
+                        </div>
                     </li>
                 </ul>
             </div>
@@ -94,7 +102,24 @@ export default {
                 this.selectedNamespace = cachedNamespace;
                 this.fetchPods(); // fetch pods selected namespace
             }
-        }
+        },
+        // Edit Pod method
+        editPod(podName) {
+            this.$router.push({ name: 'PodEdit', params: { podName } });
+        },
+        // Go to Pod Detail method
+        goToDetail(podName) {
+            this.$router.push({ name: 'PodDetail', params: { podName } });
+        },
+        // Delete Pod method
+        async deletePod(podName) {
+            try {
+                await axios.delete(`/pods/${podName}`);
+                this.fetchPods(); // Refresh pod list after deletion
+            } catch (error) {
+                console.error(`Error deleting pod ${podName}:`, error);
+            }
+        },
     }
 };
 </script>
@@ -107,10 +132,30 @@ export default {
     margin-top: 20px;
 }
 
-button {
-    margin-bottom: 20px;
-    padding: 8px 16px;
-    font-size: 16px;
+.pod-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.pod-info {
+    flex-grow: 1;
+}
+
+.pod-actions {
+    display: flex;
+    align-items: center;
+}
+
+.pod-actions i {
+    font-size: 20px;
+    margin-left: 10px;
     cursor: pointer;
+}
+
+.pod-actions i:hover {
+    color: #007bff;
 }
 </style>
