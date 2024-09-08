@@ -35,7 +35,7 @@
       async fetchNamespaces() {
         try {
           // Fetch data from the endpoint
-          const response = await axios.get('http://localhost:8080/namespaces');
+          const response = await axios.get('/namespaces');
           this.namespaces = response.data.data.items || []; // Use empty array if items is undefined
         } catch (error) {
           console.error('Error fetching namespace data:', error); // Error handling

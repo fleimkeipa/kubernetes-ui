@@ -109,7 +109,7 @@ export default {
       // Send JSON on the /pods endpoint
       try {
         console.log(this.podRequest)
-        const response = await axios.post('http://localhost:8080/pods', this.podRequest, {
+        const response = await axios.post('/deployments', this.podRequest, {
           headers: {
             'Content-Type': 'application/json',
           },

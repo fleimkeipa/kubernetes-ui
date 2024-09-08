@@ -60,7 +60,7 @@ export default {
       // Send JSON to /namespace endpoint
       try {
         console.log(this.namespaceRequest)
-        const response = await axios.post('http://localhost:8080/namespaces', this.namespaceRequest, {
+        const response = await axios.post('/namespaces', this.namespaceRequest, {
           headers: {
             'Content-Type': 'application/json',
           },
