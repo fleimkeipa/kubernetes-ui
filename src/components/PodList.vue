@@ -15,7 +15,11 @@
             <div v-if="pods && pods.length">
                 <ul>
                     <li v-for="(pod, index) in pods" :key="index">
-                        <h2>Pod Name: {{ pod.metadata.name }}</h2>
+                        <h2>
+                            <router-link :to="{ name: 'PodDetail', params: { podName: pod.metadata.name } }">
+                                Pod Name: {{ pod.metadata.name }}
+                            </router-link>
+                        </h2>
                         <p>Namespace: {{ pod.metadata.namespace }}</p>
                         <p>UID: {{ pod.metadata.uid }}</p>
                         <p>Status: {{ pod.status.phase }}</p>
@@ -58,7 +62,7 @@ export default {
         // method for fetch namepsace
         async fetchNamespaces() {
             try {
-                const response = await axios.get('http://localhost:8080/namespace');
+                const response = await axios.get('http://localhost:8080/namespaces');
                 this.namespaces = response.data.data.items.map((item) => item.metadata.name);
             } catch (error) {
                 console.error('Error fetching namespaces data:', error);
@@ -68,7 +72,7 @@ export default {
         async fetchPods() {
             if (!this.selectedNamespace) return; // return if not found any pod
             try {
-                const response = await axios.get(`http://localhost:8080/pods?namespace=${this.selectedNamespace}`);
+                const response = await axios.get(`http://localhost:8080/pods?namespaces=${this.selectedNamespace}`);
                 this.pods = response.data.data.items || []; // send pods inside the list
             } catch (error) {
                 console.error('Error fetching pods data:', error);
