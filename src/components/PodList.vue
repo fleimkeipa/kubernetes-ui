@@ -1,30 +1,40 @@
 <template>
-    <div class="pod-list">
-        <h2>Pod List</h2>
-        <!-- The data will automatically load when the component is mounted -->
-        <div v-if="pods && pods.length">
-            <!-- Check if pods is defined and has items -->
-            <ul>
-                <li v-for="(pod, index) in pods" :key="index">
-                    <h2>Pod Name: {{ pod.metadata.name }}</h2>
-                    <p>Namespace: {{ pod.metadata.namespace }}</p>
-                    <p>UID: {{ pod.metadata.uid }}</p>
-                    <p>Status: {{ pod.status.phase }}</p>
-                    <p>Start Time: {{ pod.status.startTime }}</p>
+    <div>
+        <h1>Namespace List</h1>
+        <!-- Namespace select box -->
+        <select v-if="namespaces.length" v-model="selectedNamespace" @change="onNamespaceChange">
+            <option v-for="(namespace, index) in namespaces" :key="index" :value="namespace">
+                {{ namespace }}
+            </option>
+        </select>
+        <p v-else>Not found any namespace</p>
 
-                    <h3>Container Info</h3>
-                    <ul>
-                        <li v-for="(container, containerIndex) in pod.spec.containers" :key="containerIndex">
-                            <p>Name: {{ container.name }}</p>
-                            <p>Image: {{ container.image }}</p>
-                            <p>Image Pull Policy: {{ container.imagePullPolicy }}</p>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
-        <div v-else>
-            <p>No data loaded or data is empty.</p>
+        <div class="pod-list">
+            <h2>Pod List</h2>
+            <!-- Pod list -->
+            <div v-if="pods && pods.length">
+                <ul>
+                    <li v-for="(pod, index) in pods" :key="index">
+                        <h2>Pod Name: {{ pod.metadata.name }}</h2>
+                        <p>Namespace: {{ pod.metadata.namespace }}</p>
+                        <p>UID: {{ pod.metadata.uid }}</p>
+                        <p>Status: {{ pod.status.phase }}</p>
+                        <p>Start Time: {{ pod.status.startTime }}</p>
+
+                        <h3>Container Info</h3>
+                        <ul>
+                            <li v-for="(container, containerIndex) in pod.spec.containers" :key="containerIndex">
+                                <p>Name: {{ container.name }}</p>
+                                <p>Image: {{ container.image }}</p>
+                                <p>Image Pull Policy: {{ container.imagePullPolicy }}</p>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div v-else>
+                <p>Not found any pod</p>
+            </div>
         </div>
     </div>
 </template>
@@ -35,24 +45,53 @@ import axios from 'axios';
 export default {
     data() {
         return {
-            pods: [], // Initialize pods as an empty array
+            namespaces: [], // keep namespaces list
+            selectedNamespace: '', // selected namespace
+            pods: [], // keep pods list
         };
     },
+    mounted() {
+        this.fetchNamespaces(); // fetch namespace when component load
+        this.loadSelectedNamespace(); // load selected namespace on cache
+    },
     methods: {
-        async fetchPods() {
+        // method for fetch namepsace
+        async fetchNamespaces() {
             try {
-                // Fetch data from the endpoint
-                const response = await axios.get('http://localhost:8080/pods');
-                this.pods = response.data.data.items || []; // Use empty array if items is undefined
+                const response = await axios.get('http://localhost:8080/namespace');
+                this.namespaces = response.data.data.items.map((item) => item.metadata.name);
             } catch (error) {
-                console.error('Error fetching pods data:', error); // Error handling
+                console.error('Error fetching namespaces data:', error);
             }
         },
-    },
-    mounted() {
-        // Automatically fetch data when the component is mounted
-        this.fetchPods();
-    },
+        // method for fetch pods
+        async fetchPods() {
+            if (!this.selectedNamespace) return; // return if not found any pod
+            try {
+                const response = await axios.get(`http://localhost:8080/pods?namespace=${this.selectedNamespace}`);
+                this.pods = response.data.data.items || []; // send pods inside the list
+            } catch (error) {
+                console.error('Error fetching pods data:', error);
+            }
+        },
+        // trigger when namespace changed
+        onNamespaceChange() {
+            this.saveSelectedNamespace();
+            this.fetchPods();
+        },
+        // save selected namespace on cache
+        saveSelectedNamespace() {
+            localStorage.setItem('selectedNamespace', this.selectedNamespace);
+        },
+        // load selected namespace on cache
+        loadSelectedNamespace() {
+            const cachedNamespace = localStorage.getItem('selectedNamespace');
+            if (cachedNamespace) {
+                this.selectedNamespace = cachedNamespace;
+                this.fetchPods(); // fetch pods selected namespace
+            }
+        }
+    }
 };
 </script>
 
