@@ -2,8 +2,8 @@
   <div class="namespace-form">
     <!-- Toolbar -->
     <div class="toolbar">
-      <button @click="showComponent('A')">Namespace List</button>
-      <button @click="showComponent('B')">Namespace Create</button>
+      <button @click="showComponent('A')" class="toolbar-link">Namespace List</button>
+      <button @click="showComponent('B')" class="toolbar-link">Namespace Create</button>
     </div>
 
     <!-- Form Bileşenleri -->
@@ -43,14 +43,33 @@ export default {
   display: flex;
   justify-content: center;
   padding: 10px;
+  background-color: #f0f0f0;
   border-bottom: 1px solid #ddd;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 }
 
-.toolbar button {
-  margin: 0 10px;
-  padding: 8px 16px;
-  font-size: 14px;
-  cursor: pointer;
+.toolbar-link {
+  display: inline-block;
+  margin: 0 15px;
+  padding: 10px 20px;
+  font-size: 12px;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: none;
+  color: #fff;
+  background-color: #d800f5;
+  border-radius: 5px;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.toolbar-link:hover,
+.toolbar-link:focus {
+  background-color: #7b0f94;
+  transform: translateY(-2px);
+}
+
+.toolbar-link:active {
+  background-color: #003d7a;
+  transform: translateY(0);
 }
 </style>
