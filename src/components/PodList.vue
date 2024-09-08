@@ -17,7 +17,7 @@
                     <li v-for="(pod, index) in pods" :key="index">
                         <h2>
                             <router-link :to="{ name: 'PodDetail', params: { podName: pod.metadata.name } }">
-                                Pod Name: {{ pod.metadata.name }}
+                                {{ pod.metadata.name }}
                             </router-link>
                         </h2>
                         <p>Namespace: {{ pod.metadata.namespace }}</p>
