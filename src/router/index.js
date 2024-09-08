@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import PodForm from '@/components/PodForm.vue'; // Pod main form
 import PodDetail from '@/components/PodDetail.vue'; // Pod detail form
 import NamespaceForm from '@/components/NamespaceForm.vue'; // Namespace main form
+import NamespaceDetail from '@/components/NamespaceDetail.vue'; // Namespace main form
 import DeploymentList from '@/components/DeploymentForm.vue'; // Deployment main form
 
 const routes = [
@@ -19,6 +20,11 @@ const routes = [
         path: '/namespaces',
         name: 'NamespaceList',
         component: NamespaceForm
+    },
+    {
+        path: '/namespaces/:namespaceName',
+        name: 'NamespaceDetail',
+        component: NamespaceDetail
     },
     {
         path: '/deployments',
