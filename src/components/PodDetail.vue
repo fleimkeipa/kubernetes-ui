@@ -17,7 +17,8 @@
             <div class="info-section">
                 <h3>Container Info</h3>
                 <ul class="container-list">
-                    <li v-for="(container, containerIndex) in pod.spec.containers" :key="containerIndex" class="container-item">
+                    <li v-for="(container, containerIndex) in pod.spec.containers" :key="containerIndex"
+                        class="container-item">
                         <p><strong>Name:</strong> {{ container.name }}</p>
                         <p><strong>Image:</strong> {{ container.image }}</p>
                         <p><strong>Image Pull Policy:</strong> {{ container.imagePullPolicy }}</p>
@@ -132,26 +133,35 @@ export default {
     color: #333;
 }
 
-.container-list, .conditions-list, .ips-list, .statuses-list {
+.container-list,
+.conditions-list,
+.ips-list,
+.statuses-list {
     list-style: none;
     padding: 0;
 }
 
-.container-item, .conditions-list li, .ips-list li, .statuses-list li {
+.container-item,
+.conditions-list li,
+.ips-list li,
+.statuses-list li {
     border-bottom: 1px solid #ddd;
     padding: 10px 0;
 }
 
-.container-item:last-child, .conditions-list li:last-child, .ips-list li:last-child, .statuses-list li:last-child {
+.container-item:last-child,
+.conditions-list li:last-child,
+.ips-list li:last-child,
+.statuses-list li:last-child {
     border-bottom: none;
 }
 
-.volume-mounts, .container-statuses {
+.volume-mounts,
+.container-statuses {
     padding-left: 20px;
 }
 
 .volume-mounts li {
     margin-bottom: 10px;
 }
-
 </style>
