@@ -1,29 +1,35 @@
 <template>
-  <div class="namespace-form">
+  <div class="pod-form">
     <!-- Toolbar -->
     <div class="toolbar">
-      <button @click="showComponent('A')" class="toolbar-link">Namespace List</button>
-      <button @click="showComponent('B')" class="toolbar-link">Namespace Create</button>
+      <button @click="showComponent('A')" class="toolbar-link">List</button>
+      <button @click="showComponent('B')" class="toolbar-link">Simple Create</button>
+      <button @click="showComponent('C')" class="toolbar-link">Advanced Create</button>
     </div>
 
-    <!-- Form Bileşenleri -->
+    <!-- Forms -->
     <div v-if="currentComponent === 'A'">
-      <NamespaceList />
+      <PodListForm />
     </div>
     <div v-if="currentComponent === 'B'">
-      <NamespaceCreate />
+      <SimplePodForm />
+    </div>
+    <div v-if="currentComponent === 'C'">
+      <AdvancedPodForm />
     </div>
   </div>
 </template>
 
 <script>
-import NamespaceCreate from './NamespaceCreateSimple.vue';
-import NamespaceList from './NamespaceList.vue';
+import PodListForm from '../components/PodList.vue';
+import AdvancedPodForm from '../components/PodCreateAdvanced.vue';
+import SimplePodForm from '../components/PodCreateSimple.vue';
 
 export default {
   components: {
-    NamespaceList,
-    NamespaceCreate,
+    SimplePodForm,
+    AdvancedPodForm,
+    PodListForm
   },
   data() {
     return {

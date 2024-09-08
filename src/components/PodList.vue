@@ -1,13 +1,13 @@
 <template>
     <div>
-        <h1>Namespace List</h1>
-        <!-- Namespace select box -->
-        <select v-if="namespaces.length" v-model="selectedNamespace" @change="onNamespaceChange">
-            <option v-for="(namespace, index) in namespaces" :key="index" :value="namespace">
-                {{ namespace }}
-            </option>
-        </select>
-        <p v-else>Not found any namespace</p>
+        <h4>Namespace List: <!-- Namespace select box -->
+            <select v-if="namespaces.length" v-model="selectedNamespace" @change="onNamespaceChange">
+                <option v-for="(namespace, index) in namespaces" :key="index" :value="namespace">
+                    {{ namespace }}
+                </option>
+            </select>
+            <p v-else>Not found any namespace</p>
+        </h4>
 
         <div class="pod-list">
             <h2>Pod List</h2>
@@ -59,7 +59,7 @@ export default {
         this.loadSelectedNamespace(); // load selected namespace on cache
     },
     methods: {
-        // method for fetch namepsace
+        // method for fetch namespace
         async fetchNamespaces() {
             try {
                 const response = await axios.get('/namespaces');
