@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axios from '../axios';
 
 export default {
     data() {
@@ -62,7 +62,7 @@ export default {
         // method for fetch namepsace
         async fetchNamespaces() {
             try {
-                const response = await axios.get('http://localhost:8080/namespaces');
+                const response = await axios.get('/namespaces');
                 this.namespaces = response.data.data.items.map((item) => item.metadata.name);
             } catch (error) {
                 console.error('Error fetching namespaces data:', error);
@@ -72,7 +72,7 @@ export default {
         async fetchPods() {
             if (!this.selectedNamespace) return; // return if not found any pod
             try {
-                const response = await axios.get(`http://localhost:8080/pods?namespaces=${this.selectedNamespace}`);
+                const response = await axios.get(`/pods?namespace=${this.selectedNamespace}`);
                 this.pods = response.data.data.items || []; // send pods inside the list
             } catch (error) {
                 console.error('Error fetching pods data:', error);

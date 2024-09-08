@@ -1,23 +1,24 @@
 <template>
     <div class="pod-detail">
-        <h2>Pod Detayları: {{ podName }}</h2>
+        <h2>Pod Details: {{ podName }}</h2>
         <div v-if="pod">
             <p><strong>Namespace:</strong> {{ pod.metadata.namespace }}</p>
             <p><strong>UID:</strong> {{ pod.metadata.uid }}</p>
-            <p><strong>Durum:</strong> {{ pod.status.phase }}</p>
-            <p><strong>Başlangıç Zamanı:</strong> {{ pod.status.startTime }}</p>
+            <p><strong>Status:</strong> {{ pod.status.phase }}</p>
+            <p><strong>Start Time:</strong> {{ pod.status.startTime }}</p>
 
-            <h3>Konteyner Bilgileri</h3>
+
+            <h3>Container Info</h3>
             <ul>
                 <li v-for="(container, containerIndex) in pod.spec.containers" :key="containerIndex">
-                    <p>İsim: {{ container.name }}</p>
-                    <p>Görsel: {{ container.image }}</p>
-                    <p>Image Pull Politikası: {{ container.imagePullPolicy }}</p>
+                    <p>Name: {{ container.name }}</p>
+                    <p>Image: {{ container.image }}</p>
+                    <p>Image Pull Policy: {{ container.imagePullPolicy }}</p>
                 </li>
             </ul>
         </div>
         <div v-else>
-            <p>Pod detayı yükleniyor...</p>
+            <p>Not found any pod</p>
         </div>
     </div>
 </template>
@@ -28,24 +29,24 @@ import axios from 'axios';
 export default {
     data() {
         return {
-            pod: null, // Pod detayını saklar
+            pod: null, // keep pod details
         };
     },
     computed: {
         podName() {
-            return this.$route.params.podName; // Dinamik rota parametresinden pod adını alır
+            return this.$route.params.podName; // Gets the pod name from the dynamic route parameter
         }
     },
     created() {
-        this.fetchPodDetail(); // Bileşen oluşturulduğunda pod detayını getirir
+        this.fetchPodDetail(); // Gets the pod detail when the component is created
     },
     methods: {
         async fetchPodDetail() {
             try {
-                const response = await axios.get(`http://localhost:8080/pods/${this.podName}`); // Pod adını kullanarak detay alır
+                const response = await axios.get(`/pods/${this.podName}`); // Gets details using pod name
                 this.pod = response.data.data;
             } catch (error) {
-                console.error('Pod detayı alınırken bir hata oluştu:', error);
+                console.error('Error fetching pods data:', error);
             }
         }
     }
