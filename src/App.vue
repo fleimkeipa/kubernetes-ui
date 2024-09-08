@@ -3,8 +3,8 @@
     <!-- Toolbar -->
     <div class="toolbar">
       <button @click="showComponent('A')">Deployment Create</button>
-      <button @click="showComponent('B')">Pod Create</button>
-      <button @click="showComponent('C')">Namespace list</button>
+      <button @click="showComponent('B')">Pod</button>
+      <button @click="showComponent('C')">Namespace</button>
     </div>
 
     <!-- Form Bileşenleri -->
@@ -15,7 +15,7 @@
       <PodForm />
     </div>
     <div v-if="currentComponent === 'C'">
-      <NamespaceListForm />
+      <NamespaceForm />
     </div>
   </div>
 </template>
@@ -23,13 +23,13 @@
 <script>
 import DeploymentForm from './components/DeploymentForm.vue';
 import PodForm from './components/PodForm.vue';
-import NamespaceListForm from './components/NamespaceList.vue';
+import NamespaceForm from './components/NamespaceForm.vue';
 
 export default {
   components: {
     DeploymentForm,
     PodForm,
-    NamespaceListForm,
+    NamespaceForm,
   },
   data() {
     return {
