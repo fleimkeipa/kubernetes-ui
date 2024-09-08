@@ -5,3 +5,4 @@ explorations
 .vscode
 dist
 temp
+.env
