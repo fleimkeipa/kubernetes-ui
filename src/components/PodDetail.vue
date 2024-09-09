@@ -33,6 +33,16 @@
                                 </li>
                             </ul>
                         </div>
+                        <div v-if="container.ports.length">
+                            <h4>Ports</h4>
+                            <ul class="volume-mounts">
+                                <li v-for="(port, portIndex) in container.ports" :key="portIndex">
+                                    <p><strong>Name:</strong> {{ port.name }}</p>
+                                    <p><strong>Container Port:</strong> {{ port.containerPort }}</p>
+                                    <p><strong>Protocol:</strong> {{ port.protocol }}</p>
+                                </li>
+                            </ul>
+                        </div>
                     </li>
                 </ul>
             </div>
