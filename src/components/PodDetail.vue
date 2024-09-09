@@ -33,7 +33,7 @@
                                 </li>
                             </ul>
                         </div>
-                        <div v-if="container.ports.length">
+                        <div v-if="container.ports">
                             <h4>Ports</h4>
                             <ul class="volume-mounts">
                                 <li v-for="(port, portIndex) in container.ports" :key="portIndex">
