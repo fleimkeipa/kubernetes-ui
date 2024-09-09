@@ -5,6 +5,7 @@ import PodEdit from '@/components/PodEdit.vue'; // Pod edit form
 
 import NamespaceView from '@/views/NamespaceView.vue'; // Namespace main view
 import NamespaceDetail from '@/components/NamespaceDetail.vue'; // Namespace detail form
+import NamespaceEdit from '@/components/NamespaceEdit.vue'; // Namespace edit form
 
 import DeploymentView from '@/views/DeploymentView.vue'; // Deployment main view
 import DeploymentDetail from '@/components/DeploymentDetail.vue'; // Deployment detail form
@@ -36,6 +37,11 @@ const routes = [
         path: '/namespaces/:namespaceName',
         name: 'NamespaceDetail',
         component: NamespaceDetail
+    },
+    {
+        path: '/namespaces/:namespaceName',
+        name: 'NamespaceEdit',
+        component: NamespaceEdit
     },
 
     {
