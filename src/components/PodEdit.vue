@@ -6,12 +6,12 @@
                 <!-- Pod Metadata Fields -->
                 <div>
                     <label for="namespace">Namespace:</label>
-                    <input type="text" id="namespace" v-model="pod.metadata.namespace" readonly/>
+                    <input type="text" id="namespace" v-model="pod.metadata.namespace" readonly />
                 </div>
 
                 <div>
                     <label for="name">Pod Name:</label>
-                    <input type="text" id="name" v-model="pod.metadata.name" readonly/>
+                    <input type="text" id="name" v-model="pod.metadata.name" readonly />
                 </div>
 
                 <div>
@@ -29,7 +29,7 @@
                 <h3>Container Info</h3>
                 <div v-for="(container, index) in pod.spec.containers" :key="index">
                     <label for="container-name">Container Name:</label>
-                    <input type="text" id="container-name" v-model="container.name" readonly/>
+                    <input type="text" id="container-name" v-model="container.name" readonly />
 
                     <label for="container-image">Container Image:</label>
                     <input type="text" id="container-image" v-model="container.image" />
@@ -54,7 +54,11 @@ export default {
     },
     data() {
         return {
-            pod: null
+            pod: null,
+            podRequest: {
+                pod: null,
+                opts: null
+            }
         };
     },
     created() {
@@ -73,7 +77,8 @@ export default {
         // Update pod details
         async updatePod() {
             try {
-                await axios.put(`/pods/${this.pod.metadata.name}`, this.pod);
+                this.podRequest.pod = this.pod
+                await axios.put(`/pods/${this.pod.metadata.name}`, this.podRequest);
                 this.$router.push({ name: 'PodList' }); // Return to pod list or other relevant route
             } catch (error) {
                 console.error('Error updating pod:', error);
@@ -101,7 +106,8 @@ label {
     font-weight: bold;
 }
 
-input, select {
+input,
+select {
     width: 100%;
     padding: 8px;
     margin-top: 5px;

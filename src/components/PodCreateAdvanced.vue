@@ -62,7 +62,7 @@
       <div>
         <label>Dry run:</label>
         <div v-for="(annotation, index) in podRequest.opts.dryRun" :key="index" class="dryrun-form">
-          <input type="text" v-model="podRequest.opts.dryRun[index]" placeholder="Dry run (ex: default)" />
+          <input type="text" v-model="podRequest.opts.dryRun[index]" placeholder="Dry run (ex: none, client, server)" />
           <button @click="removeDryRun(index)">Delete</button>
         </div>
         <button @click="addDryRun">Add new dry run</button>
@@ -119,20 +119,20 @@ export default {
   },
   methods: {
     addContainer() {
-      this.podRequest.spec.containers.push({
+      this.podRequest.pod.spec.containers.push({
         name: '',
         image: '',
         ports: [{ name: '', containerPort: '' }]
       });
     },
     removeContainer(index) {
-      this.podRequest.spec.containers.splice(index, 1);
+      this.podRequest.pod.spec.containers.splice(index, 1);
     },
     addPort(containerIndex) {
-      this.podRequest.spec.containers[containerIndex].ports.push({ name: '', containerPort: '' });
+      this.podRequest.pod.spec.containers[containerIndex].ports.push({ name: '', containerPort: '' });
     },
     removePort(containerIndex, portIndex) {
-      this.podRequest.spec.containers[containerIndex].ports.splice(portIndex, 1);
+      this.podRequest.pod.spec.containers[containerIndex].ports.splice(portIndex, 1);
     },
     addDryRun() {
       // Add new dry run

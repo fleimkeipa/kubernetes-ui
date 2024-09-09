@@ -63,11 +63,11 @@ export default {
   methods: {
     addContainer() {
       // Add new container
-      this.podRequest.spec.containers.push({ name: '', image: '' });
+      this.podRequest.pod.spec.containers.push({ name: '', image: '' });
     },
     removeContainer(index) {
       // Delete specify container
-      this.podRequest.spec.containers.splice(index, 1);
+      this.podRequest.pod.spec.containers.splice(index, 1);
     },
     async sendJson() {
       // Send JSON to /pods endpoint
