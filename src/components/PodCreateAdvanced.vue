@@ -4,28 +4,47 @@
     <!-- ObjectMeta Inputs -->
     <div>
       <label>Name:</label>
-      <input type="text" v-model="podRequest.object_meta.name" placeholder="Name (ex: my-pod)" />
+      <input type="text" v-model="podRequest.pod.metadata.name" placeholder="Name (ex: my-pod)" />
     </div>
 
     <div>
       <label>Namespace (optional):</label>
-      <input type="text" v-model="podRequest.object_meta.namespace" placeholder="Namespace (default value: default)" />
+      <input type="text" v-model="podRequest.pod.metadata.namespace" placeholder="Namespace (default value: default)" />
     </div>
 
     <!-- Spec - Containers Inputs -->
     <div>
       <h3>Containers</h3>
-      <div v-for="(container, index) in podRequest.spec.containers" :key="index" class="container-form">
-        <label>Container {{ index + 1 }} Name:</label>
+      <div v-for="(container, cIndex) in podRequest.pod.spec.containers" :key="cIndex" class="container-form">
+        <label>Container {{ cIndex + 1 }} Name:</label>
         <input type="text" v-model="container.name" placeholder="Container name (ex: cont-1)" />
 
-        <label>Container {{ index + 1 }} Image:</label>
+        <label>Container {{ cIndex + 1 }} Image:</label>
         <input type="text" v-model="container.image" placeholder="Container image (ex: nginx:latest)" />
 
-        <button @click="removeContainer(index)">Delete</button>
+        <!-- Spec - Containers Ports Inputs -->
+        <div class="ports-section">
+          <h3>Ports</h3>
+          <div v-for="(port, pIndex) in container.ports" :key="pIndex" class="port-form">
+            <div class="port-item">
+              <div class="port-details">
+                <label>Port {{ pIndex + 1 }} Name:</label>
+                <input type="text" v-model="port.name" placeholder="Port name (ex: http)" />
+
+                <label>Port {{ pIndex + 1 }} Container Port:</label>
+                <input type="number" v-model="port.containerPort" placeholder="Port number (ex: 80)" />
+              </div>
+              <button class="delete-btn" @click="removePort(cIndex, pIndex)">Delete</button>
+            </div>
+          </div>
+
+          <button class="add-btn" @click="addPort(cIndex)">Add new port</button>
+        </div>
+
+        <button class="delete-btn" @click="removeContainer(cIndex)">Delete Container</button>
       </div>
 
-      <button @click="addContainer">Add new container</button>
+      <button class="add-btn" @click="addContainer">Add new container</button>
     </div>
 
     <!-- Create options -->
@@ -67,14 +86,25 @@ export default {
   data() {
     return {
       podRequest: {
-        object_meta: {
-          name: '',
-          namespace: '',
-        },
-        spec: {
-          containers: [
-            { name: '', image: '' },
-          ],
+        pod: {
+          metadata: {
+            name: '',
+            namespace: '',
+          },
+          spec: {
+            containers: [
+              {
+                name: '',
+                image: '',
+                ports: [
+                  {
+                    name: '',
+                    containerPort: '',
+                  },
+                ],
+              },
+            ],
+          },
         },
         opts: {
           fieldManager: '',
@@ -89,35 +119,41 @@ export default {
   },
   methods: {
     addContainer() {
-      // Add new container
-      this.podRequest.spec.containers.push({ name: '', image: '' });
+      this.podRequest.spec.containers.push({
+        name: '',
+        image: '',
+        ports: [{ name: '', containerPort: '' }]
+      });
     },
     removeContainer(index) {
-      // Delete specify container
       this.podRequest.spec.containers.splice(index, 1);
+    },
+    addPort(containerIndex) {
+      this.podRequest.spec.containers[containerIndex].ports.push({ name: '', containerPort: '' });
+    },
+    removePort(containerIndex, portIndex) {
+      this.podRequest.spec.containers[containerIndex].ports.splice(portIndex, 1);
     },
     addDryRun() {
       // Add new dry run
-      this.podRequest.annotations.push('');
+      this.podRequest.opts.dryRun.push('');
     },
     removeDryRun(index) {
-      // Delete specify dry run
-      this.podRequest.annotations.splice(index, 1);
+      // Delete specific dry run
+      this.podRequest.opts.dryRun.splice(index, 1);
     },
     async sendJson() {
       // Send JSON to /pods endpoint
       try {
-        console.log(this.podRequest)
-        const response = await axios.post('/pods', this.podRequest, {
+        await axios.post('/pods', this.podRequest, {
           headers: {
             'Content-Type': 'application/json',
           },
         });
-        this.sendStatus = 'Pod created succesfully!';
-        console.log(response)
+        this.sendStatus = 'Pod created successfully!';
       } catch (error) {
         console.error(error);
-        this.sendStatus = 'An error occurred while sending data.';
+        this.sendStatus = 'An error occurred while sending data.' + error;
       }
     },
   },
@@ -126,27 +162,84 @@ export default {
 
 <style scoped>
 .pod-form {
-  margin: 20px;
+  max-width: 600px;
+  margin: 20px auto;
   padding: 20px;
   border: 1px solid #ddd;
-  border-radius: 5px;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 input {
   margin: 5px 0;
-  padding: 5px;
-  width: calc(100% - 10px);
+  padding: 8px;
+  width: calc(100% - 16px);
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
 }
 
 button {
   margin-top: 10px;
-  padding: 5px 10px;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #fff;
+  background-color: #007bff;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+.add-btn {
+  background-color: #28a745;
+  margin-bottom: 10px;
+}
+
+.add-btn:hover {
+  background-color: #218838;
+}
+
+.delete-btn {
+  background-color: #dc3545;
+}
+
+.delete-btn:hover {
+  background-color: #c82333;
 }
 
 .dryrun-form,
-.container-form {
+.container-form,
+.port-form {
   margin-bottom: 15px;
   border-bottom: 1px solid #ddd;
   padding-bottom: 10px;
+}
+
+.port-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.port-details {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  margin-right: 10px;
+}
+
+.ports-section {
+  background-color: #fff;
+  padding: 10px;
+  border: 1px solid #eaeaea;
+  border-radius: 6px;
+  margin-top: 10px;
 }
 </style>
