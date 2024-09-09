@@ -59,14 +59,12 @@ export default {
     async sendJson() {
       // Send JSON to /namespace endpoint
       try {
-        console.log(this.namespaceRequest)
-        const response = await axios.post('/namespaces', this.namespaceRequest, {
+        await axios.post('/namespaces', this.namespaceRequest, {
           headers: {
             'Content-Type': 'application/json',
           },
         });
         this.sendStatus = 'Namespace created succesfully!';
-        console.log(response)
       } catch (error) {
         console.error(error);
         this.sendStatus = 'An error occurred while sending data.';
