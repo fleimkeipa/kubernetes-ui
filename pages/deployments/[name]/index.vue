@@ -1,6 +1,10 @@
 <script setup>
 import * as yup from "yup";
 
+definePageMeta({
+  middleware: "auth",
+});
+
 const route = useRoute();
 const { isFetching } = useApi(`/namespaces/${route.params.name}`, {
   afterFetch: (ctx) => {
