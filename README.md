@@ -1,4 +1,6 @@
-# Nuxt 3 Minimal Starter
+# ![a-diagram-of-a-kubernetes-api-wrapper-with-authent-oEk9zzsWS8W6Fb6pJ52RqA-fGl--Cl8StqGaT3q84aWKA](https://github.com/user-attachments/assets/edc301f6-2bc4-4747-b6df-4365ffba562c)
+
+Nuxt 3 Minimal Starter
 
 Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
 
