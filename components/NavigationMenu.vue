@@ -6,19 +6,19 @@ const links = [
     to: "/",
   },
   {
-    label: "Events",
+    label: "Deployments",
     icon: "i-heroicons-circle-stack",
-    to: "/events",
+    to: "/deployments",
   },
   {
-    label: "Eras",
+    label: "Pods",
     icon: "i-heroicons-cube",
-    to: "/eras",
+    to: "/pods",
   },
   {
-    label: "Connects",
+    label: "Namespaces",
     icon: "i-heroicons-folder-open",
-    to: "/connects",
+    to: "/namespaces",
   },
 ];
 </script>

@@ -7,10 +7,6 @@ type Row = {
   metadata: {
     uid: string;
     name: string;
-    namespace: string;
-  };
-  spec: {
-    containers: [];
   };
 };
 
@@ -24,10 +20,6 @@ const columns = [
     label: "Name",
   },
   {
-    key: "metadata.namespace",
-    label: "Namespace",
-  },
-  {
     key: "actions",
   },
 ];
@@ -36,8 +28,8 @@ const {
   data: items,
   error,
   isFetching,
-  execute: fetchPods,
-} = useApi<{ data: { items: Row[] } }>("/connects").json();
+  execute: fetchNamespaces,
+} = useApi<{ data: { items: Row[] } }>("/namespaces").json();
 
 const router = useRouter();
 
@@ -46,7 +38,7 @@ const actions = (row: Row) => [
     {
       label: "Edit",
       icon: "i-heroicons-pencil-square-20-solid",
-      click: () => router.push(`/connects/${row.metadata.name}`),
+      click: () => router.push(`/namespaces/${row.metadata.name}`),
     },
     {
       label: "Delete",
@@ -57,8 +49,8 @@ const actions = (row: Row) => [
 ];
 
 const handleDelete = async (uid: string) => {
-  useApi(`/connects/${uid}`, {
-    afterFetch: () => fetchPods(),
+  useApi(`/namespaces/${uid}`, {
+    afterFetch: () => fetchNamespaces(),
   }).delete();
 };
 </script>
@@ -68,12 +60,12 @@ const handleDelete = async (uid: string) => {
   <div v-else>
     <div class="flex flex-row items-center justify-between">
       <UButton icon="i-heroicons-plus">
-        <NuxtLink to="/connects/create/new">Create New</NuxtLink>
+        <NuxtLink to="/namespaces/create/new">Create New</NuxtLink>
       </UButton>
       <UButton
         icon="i-heroicons-arrow-path"
         :loading="isFetching"
-        @click="fetchPods"
+        @click="fetchNamespaces"
       ></UButton>
     </div>
     <UTable
@@ -85,13 +77,6 @@ const handleDelete = async (uid: string) => {
         label: 'Loading...',
       }"
     >
-      <template #expand="{ row }">
-        <div class="p-4">
-          <b>Containers:</b>
-          <pre>{{ row.spec.containers }}</pre>
-        </div>
-      </template>
-
       <template #actions-data="{ row }">
         <UDropdown :items="actions(row)">
           <UButton
