@@ -37,7 +37,7 @@ const {
   error,
   isFetching,
   execute: fetchPods,
-} = useApi<{ data: { items: Row[] } }>("/deployments").json();
+} = useApi<{ data: { items: Row[] } }>("/eras").json();
 
 const router = useRouter();
 
@@ -57,7 +57,7 @@ const actions = (row: Row) => [
 ];
 
 const handleDelete = async (uid: string) => {
-  useApi(`/pods/${uid}`, {
+  useApi(`/eras/${uid}`, {
     afterFetch: () => fetchPods(),
   }).delete();
 };
@@ -68,7 +68,7 @@ const handleDelete = async (uid: string) => {
   <div v-else>
     <div class="flex flex-row items-center justify-between">
       <UButton icon="i-heroicons-plus">
-        <NuxtLink to="/deployments/create/new">Create New</NuxtLink>
+        <NuxtLink to="/eras/create/new">Create New</NuxtLink>
       </UButton>
       <UButton
         icon="i-heroicons-arrow-path"

@@ -5,15 +5,8 @@ definePageMeta({
   middleware: "auth",
 });
 
-const route = useRoute();
-const { isFetching } = useApi(`/pods/${route.params.name}`, {
-  afterFetch: (ctx) => {
-    state.pod = ctx.data.data;
-  },
-}).json();
-
 const state = reactive({
-  pod: {
+  connect: {
     metadata: {
       name: null,
       namespace: null,
@@ -25,7 +18,7 @@ const state = reactive({
 });
 
 const schema = yup.object({
-  pod: yup.object({
+  connect: yup.object({
     metadata: yup.object({
       name: yup.string().required("Name cannot be empty"),
       namespace: yup.string().nullable().optional(),
@@ -41,12 +34,12 @@ const schema = yup.object({
   }),
 });
 
-// const { push, remove } = useFieldArray("podRequest.pod.spec.containers");
+// const { push, remove } = useFieldArray("podRequest.connect.spec.containers");
 const push = () => {
-  state.pod.spec.containers.push({ name: null, image: null });
+  state.connect.spec.containers.push({ name: null, image: null });
 };
 const remove = (idx) => {
-  state.pod.spec.containers.splice(idx, 1);
+  state.connect.spec.containers.splice(idx, 1);
 };
 
 const router = useRouter();
@@ -54,45 +47,43 @@ const loading = ref(false);
 const error = ref(null);
 const onSubmit = (event) => {
   loading.value = true;
-  useApi(`/pods/${route.params.name}`, {
+  useApi("/connects", {
     afterFetch: () => {
       loading.value = false;
-      router.push("/pods");
+      router.push("/connects");
     },
     onFetchError: ({ error: fetchErr }) => {
       loading.value = false;
       error.value = fetchErr;
     },
-  }).put(event.data);
+  }).post(event.data);
 };
 </script>
 
 <template>
   <div>
-    <h1 class="text-2xl font-bold">Update Pod</h1>
-    <div v-if="isFetching">Loading...</div>
+    <h1 class="text-2xl font-bold">Create Pod</h1>
     <UForm
       @submit="onSubmit"
       style="display: flex; flex-direction: column; gap: 20px"
       novalidate
       :state="state"
       :schema="schema"
-      v-else
       class="mt-8 flex items-start"
     >
-      <UFormGroup label="Name" name="pod.metadata.name">
+      <UFormGroup label="Name" name="connect.metadata.name">
         <UInput
           type="text"
           placeholder="Name"
-          v-model="state.pod.metadata.name"
+          v-model="state.connect.metadata.name"
         />
       </UFormGroup>
 
-      <UFormGroup label="Namespace" name="pod.metadata.namespace">
+      <UFormGroup label="Namespace" name="connect.metadata.namespace">
         <UInput
           type="text"
           placeholder="Namespace"
-          v-model="state.pod.metadata.namespace"
+          v-model="state.connect.metadata.namespace"
         />
       </UFormGroup>
 
@@ -111,20 +102,20 @@ const onSubmit = (event) => {
         </div>
         <div
           class="mb-4 flex flex-col gap-y-4"
-          v-if="state.pod.spec.containers.length"
+          v-if="state.connect.spec.containers.length"
         >
           <div
             :key="container.key"
-            v-for="(container, idx) in state.pod.spec.containers"
+            v-for="(container, idx) in state.connect.spec.containers"
             class="flex flex-row items-start justify-center gap-x-6"
           >
-            <UFormGroup label="Name" :name="`pod.spec.containers[${idx}].name`">
+            <UFormGroup label="Name" :name="`connect.spec.containers[${idx}].name`">
               <UInput type="text" v-model="container.name" />
             </UFormGroup>
 
             <UFormGroup
               label="Image"
-              :name="`pod.spec.containers[${idx}].image`"
+              :name="`connect.spec.containers[${idx}].image`"
             >
               <UInput
                 type="text"
@@ -139,8 +130,9 @@ const onSubmit = (event) => {
               :ui="{ rounded: 'rounded-full' }"
               color="red"
               icon="i-heroicons-trash"
-              class="self-end"
-            />
+              class="self-center"
+              >Remove Container</UButton
+            >
           </div>
         </div>
         <div v-else>

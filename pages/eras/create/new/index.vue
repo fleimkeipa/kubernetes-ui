@@ -5,23 +5,19 @@ definePageMeta({
   middleware: "auth",
 });
 
-const route = useRoute();
-const { isFetching } = useApi(`/namespaces/${route.params.name}`, {
-  afterFetch: (ctx) => {
-    console.log(ctx.data.data);
-    state.metadata = ctx.data.data.metadata;
-  },
-}).json();
-
 const state = reactive({
-  metadata: {
-    name: null,
+  era: {
+    metadata: {
+      name: null,
+    },
   },
 });
 
 const schema = yup.object({
-  metadata: yup.object({
-    name: yup.string().nonNullable("Name cannot be null"),
+  era: yup.object({
+    metadata: yup.object({
+      name: yup.string().nonNullable("Name cannot be null"),
+    }),
   }),
 });
 
@@ -30,34 +26,36 @@ const loading = ref(false);
 const error = ref(null);
 const onSubmit = (event) => {
   loading.value = true;
-  useApi(`/namespaces/${route.params.name}`, {
+  useApi("/eras", {
     afterFetch: () => {
       loading.value = false;
-      router.push("/namespaces");
+      router.push("/eras");
     },
     onFetchError: ({ error: fetchErr }) => {
       loading.value = false;
       error.value = fetchErr;
     },
-  }).put(event.data);
+  }).post(event.data);
 };
 </script>
 
 <template>
   <div>
-    <h1 class="text-2xl font-bold">Update Namespace</h1>
-    <div v-if="isFetching">Loading...</div>
+    <h1 class="text-2xl font-bold">Create Era</h1>
     <UForm
       @submit="onSubmit"
       style="display: flex; flex-direction: column; gap: 20px"
       novalidate
       :state="state"
       :schema="schema"
-      v-else
       class="mt-8 flex items-start"
     >
-      <UFormGroup label="Name" name="metadata.name">
-        <UInput type="text" placeholder="Name" v-model="state.metadata.name" />
+      <UFormGroup label="Name" name="era.metadata.name">
+        <UInput
+          type="text"
+          placeholder="Name"
+          v-model="state.era.metadata.name"
+        />
       </UFormGroup>
 
       <UButton :loading="loading" type="submit">Submit</UButton>
