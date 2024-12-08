@@ -4,31 +4,28 @@ definePageMeta({
 });
 
 type Row = {
-  metadata: {
-    uid: string;
-    name: string;
-    namespace: string;
-  };
-  spec: {
-    containers: [];
-  };
+  name: string;
+  color: string;
+  time_start: date;
+  time_end: date;
 };
 
 const columns = [
   {
-    key: "metadata.uid",
-    label: "UID",
-  },
-  {
-    key: "metadata.name",
+    key: "name",
     label: "Name",
   },
   {
-    key: "metadata.namespace",
-    label: "Namespace",
+    key: "color",
+    label: "Color",
   },
   {
-    key: "actions",
+    key: "time_start",
+    label: "Time Start",
+  },
+  {
+    key: "time_end",
+    label: "Time End",
   },
 ];
 

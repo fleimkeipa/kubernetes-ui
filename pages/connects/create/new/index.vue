@@ -7,45 +7,21 @@ definePageMeta({
 
 const state = reactive({
   connect: {
-    metadata: {
-      name: null,
-      namespace: null,
-    },
-    spec: {
-      containers: [],
-    },
+    friend_id: null,
   },
 });
 
 const schema = yup.object({
   connect: yup.object({
-    metadata: yup.object({
-      name: yup.string().required("Name cannot be empty"),
-      namespace: yup.string().nullable().optional(),
-    }),
-    spec: yup.object({
-      containers: yup.array().of(
-        yup.object({
-          name: yup.string().required("Container name cannot be empty"),
-          image: yup.string().required("Container name cannot be empty"),
-        }),
-      ),
-    }),
+    friend_id: yup.string().required("Friend cannot be empty"),
   }),
 });
 
-// const { push, remove } = useFieldArray("podRequest.connect.spec.containers");
-const push = () => {
-  state.connect.spec.containers.push({ name: null, image: null });
-};
-const remove = (idx) => {
-  state.connect.spec.containers.splice(idx, 1);
-};
 
 const router = useRouter();
 const loading = ref(false);
 const error = ref(null);
-const onSubmit = (event) => {
+const onSubmit = (connect) => {
   loading.value = true;
   useApi("/connects", {
     afterFetch: () => {
@@ -56,95 +32,25 @@ const onSubmit = (event) => {
       loading.value = false;
       error.value = fetchErr;
     },
-  }).post(event.data);
+  }).post(connect.data);
 };
 </script>
 
 <template>
   <div>
-    <h1 class="text-2xl font-bold">Create Pod</h1>
-    <UForm
-      @submit="onSubmit"
-      style="display: flex; flex-direction: column; gap: 20px"
-      novalidate
-      :state="state"
-      :schema="schema"
-      class="mt-8 flex items-start"
-    >
+    <h1 class="text-2xl font-bold">Create Connect</h1>
+    <UForm @submit="onSubmit" style="display: flex; flex-direction: column; gap: 20px" novalidate :state="state"
+      :schema="schema" class="mt-8 flex items-start">
       <UFormGroup label="Name" name="connect.metadata.name">
-        <UInput
-          type="text"
-          placeholder="Name"
-          v-model="state.connect.metadata.name"
-        />
+        <UInput type="text" placeholder="Name" v-model="state.connect.metadata.name" />
       </UFormGroup>
 
       <UFormGroup label="Namespace" name="connect.metadata.namespace">
-        <UInput
-          type="text"
-          placeholder="Namespace"
-          v-model="state.connect.metadata.namespace"
-        />
+        <UInput type="text" placeholder="Namespace" v-model="state.connect.metadata.namespace" />
       </UFormGroup>
 
-      <div>
-        <div class="mb-4 flex flex-row items-center gap-x-4">
-          <h1 class="text-xl">Containers</h1>
-          <UButton
-            @click="push()"
-            size="sm"
-            :ui="{ rounded: 'rounded-full' }"
-            color="blue"
-            icon="i-heroicons-plus"
-          >
-            Add Container
-          </UButton>
-        </div>
-        <div
-          class="mb-4 flex flex-col gap-y-4"
-          v-if="state.connect.spec.containers.length"
-        >
-          <div
-            :key="container.key"
-            v-for="(container, idx) in state.connect.spec.containers"
-            class="flex flex-row items-start justify-center gap-x-6"
-          >
-            <UFormGroup label="Name" :name="`connect.spec.containers[${idx}].name`">
-              <UInput type="text" v-model="container.name" />
-            </UFormGroup>
-
-            <UFormGroup
-              label="Image"
-              :name="`connect.spec.containers[${idx}].image`"
-            >
-              <UInput
-                type="text"
-                placeholder="Type an image..."
-                v-model="container.image"
-              />
-            </UFormGroup>
-
-            <UButton
-              @click="remove(idx)"
-              size="sm"
-              :ui="{ rounded: 'rounded-full' }"
-              color="red"
-              icon="i-heroicons-trash"
-              class="self-center"
-              >Remove Container</UButton
-            >
-          </div>
-        </div>
-        <div v-else>
-          <span class="text-md font-bold">No container</span>
-        </div>
-      </div>
-
       <UButton :loading="loading" type="submit">Submit</UButton>
-      <div
-        v-if="error"
-        class="flex items-center gap-x-2 rounded-lg border px-2 py-1"
-      >
+      <div v-if="error" class="flex items-center gap-x-2 rounded-lg border px-2 py-1">
         <span @click="error = null" class="cursor-pointer">X</span>
         <span class="text-sm text-red-500">{{ error }}</span>
       </div>

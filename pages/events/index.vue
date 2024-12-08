@@ -4,31 +4,43 @@ definePageMeta({
 });
 
 type Row = {
-  metadata: {
-    uid: string;
-    name: string;
-    namespace: string;
-  };
-  spec: {
-    containers: [];
-  };
+  name: string;
+  description: string;
+  visibility: number;
+  date: date;
+  time_start: date;
+  time_end: date;
+  items: [];
 };
 
 const columns = [
   {
-    key: "metadata.uid",
-    label: "UID",
-  },
-  {
-    key: "metadata.name",
+    key: "name",
     label: "Name",
   },
   {
-    key: "metadata.namespace",
-    label: "Namespace",
+    key: "description",
+    label: "Description",
   },
   {
-    key: "actions",
+    key: "visibility",
+    label: "Visibility",
+  },
+  {
+    key: "date",
+    label: "Date",
+  },
+  {
+    key: "time_start",
+    label: "TimeStart",
+  },
+  {
+    key: "time_end",
+    label: "TimeEnd",
+  },
+  {
+    key: "items",
+    label: "Items",
   },
 ];
 
@@ -70,35 +82,22 @@ const handleDelete = async (uid: string) => {
       <UButton icon="i-heroicons-plus">
         <NuxtLink to="/events/create/new">Create New</NuxtLink>
       </UButton>
-      <UButton
-        icon="i-heroicons-arrow-path"
-        :loading="isFetching"
-        @click="fetchPods"
-      ></UButton>
+      <UButton icon="i-heroicons-arrow-path" :loading="isFetching" @click="fetchPods"></UButton>
     </div>
-    <UTable
-      :columns="columns"
-      :rows="items.data.items"
-      :loading="isFetching"
-      :loading-state="{
-        icon: 'i-heroicons-arrow-path-20-solid',
-        label: 'Loading...',
-      }"
-    >
+    <UTable :columns="columns" :rows="items.data.items" :loading="isFetching" :loading-state="{
+      icon: 'i-heroicons-arrow-path-20-solid',
+      label: 'Loading...',
+    }">
       <template #expand="{ row }">
         <div class="p-4">
-          <b>Containers:</b>
-          <pre>{{ row.spec.containers }}</pre>
+          <b>Items:</b>
+          <pre>{{ row.items }}</pre>
         </div>
       </template>
 
       <template #actions-data="{ row }">
         <UDropdown :items="actions(row)">
-          <UButton
-            color="gray"
-            variant="ghost"
-            icon="i-heroicons-ellipsis-horizontal-20-solid"
-          />
+          <UButton color="gray" variant="ghost" icon="i-heroicons-ellipsis-horizontal-20-solid" />
         </UDropdown>
       </template>
     </UTable>
